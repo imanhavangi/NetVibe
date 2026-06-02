@@ -4,6 +4,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "NetVibe | مانیتورینگ زنده و مردمی اختلالات اینترنت ایران",
   description: "سامانه جمع‌سپاری و سنجش لحظه‌ای وضعیت فیلترینگ و پایداری شبکه اینترنت همراه و ثابت در ایران",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

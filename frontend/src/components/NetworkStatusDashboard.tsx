@@ -217,8 +217,8 @@ export default function NetworkStatusDashboard() {
         {/* Header */}
         <header className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 border-b border-slate-900 pb-6">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/20">
-              <Activity className="w-6 h-6 text-white animate-pulse" />
+            <div className="w-12 h-12 rounded-2xl overflow-hidden shadow-lg shadow-violet-500/10 border border-slate-800">
+              <img src="/icon.svg" alt="NetVibe Logo" className="w-full h-full object-cover" />
             </div>
             <div>
               <h1 className="text-2xl font-black bg-gradient-to-r from-violet-400 via-fuchsia-400 to-sky-400 bg-clip-text text-transparent">
