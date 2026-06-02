@@ -105,23 +105,31 @@ export default function NetworkStatusDashboard() {
   };
 
   const testSiteAccess = async (url: string): Promise<{ status: "online" | "offline"; ping_ms: number | null }> => {
-    const start = Date.now();
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 4000);
+    const maxAttempts = 3;
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      const start = Date.now();
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 4000);
 
-    try {
-      // mode: 'no-cors' lets us verify connectivity while bypassing CORS/ORB restrictions
-      await fetch(url, {
-        mode: "no-cors",
-        cache: "no-store",
-        signal: controller.signal,
-      });
-      clearTimeout(timer);
-      return { status: "online", ping_ms: Date.now() - start };
-    } catch (error: any) {
-      clearTimeout(timer);
-      return { status: "offline", ping_ms: null };
+      try {
+        // mode: 'no-cors' lets us verify connectivity while bypassing CORS/ORB restrictions
+        await fetch(url, {
+          mode: "no-cors",
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        clearTimeout(timer);
+        return { status: "online", ping_ms: Date.now() - start };
+      } catch (error: any) {
+        clearTimeout(timer);
+        console.warn(`Attempt ${attempt} to reach ${url} failed.`);
+        if (attempt < maxAttempts) {
+          // Wait 400ms before retrying to give transient network errors time to clear
+          await new Promise((resolve) => setTimeout(resolve, 400));
+        }
+      }
     }
+    return { status: "offline", ping_ms: null };
   };
 
   const startScan = async () => {
