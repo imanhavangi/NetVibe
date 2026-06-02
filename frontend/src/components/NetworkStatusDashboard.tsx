@@ -54,6 +54,18 @@ const SITES_TO_TEST: SiteToTest[] = [
   { name: "Digikala", url: "https://www.digikala.com", category: "local", angle: 10, distance: 35 },
 ];
 
+const cleanIspName = (name: string): string => {
+  if (!name) return "";
+  const lower = name.toLowerCase().trim();
+  if (lower === "mobile" || lower === "mci" || lower.includes("hamrah") || lower.includes("mci")) {
+    return "Hamrah-e-Aval (MCI)";
+  }
+  if (lower.startsWith("iran cell") || lower === "irancell" || lower.includes("irancell")) {
+    return "Irancell";
+  }
+  return name;
+};
+
 export default function NetworkStatusDashboard() {
   const [ipInfo, setIpInfo] = useState<UserIPInfo | null>(null);
   const [loadingIp, setLoadingIp] = useState(true);
@@ -77,6 +89,9 @@ export default function NetworkStatusDashboard() {
       const res = await fetch("/api/v1/ip-info");
       if (res.ok) {
         const data = await res.json();
+        if (data.normalized_isp) {
+          data.normalized_isp = cleanIspName(data.normalized_isp);
+        }
         setIpInfo(data);
       } else {
         throw new Error("Failed to load IP info");
@@ -95,6 +110,36 @@ export default function NetworkStatusDashboard() {
       const res = await fetch("/api/v1/dashboard-stats");
       if (res.ok) {
         const data = await res.json();
+        if (data && data.isp_rankings) {
+          const cleanedRankings: Record<string, any> = {};
+          for (const [isp, sites] of Object.entries(data.isp_rankings)) {
+            const cleanedIsp = cleanIspName(isp);
+            if (cleanedRankings[cleanedIsp]) {
+              // Merge site stats if both exist under different names (e.g. Mobile and Hamrah-e-Aval (MCI))
+              for (const [site, stat] of Object.entries(sites as Record<string, any>)) {
+                if (cleanedRankings[cleanedIsp][site]) {
+                  const existing = cleanedRankings[cleanedIsp][site];
+                  const online = existing.online_count + stat.online_count;
+                  const offline = existing.offline_count + stat.offline_count;
+                  const total = online + offline;
+                  cleanedRankings[cleanedIsp][site] = {
+                    online_count: online,
+                    offline_count: offline,
+                    avg_ping: (existing.avg_ping && stat.avg_ping)
+                      ? (existing.avg_ping * existing.online_count + stat.avg_ping * stat.online_count) / online
+                      : (existing.avg_ping || stat.avg_ping),
+                    success_rate: total > 0 ? online / total : 0,
+                  };
+                } else {
+                  cleanedRankings[cleanedIsp][site] = stat;
+                }
+              }
+            } else {
+              cleanedRankings[cleanedIsp] = JSON.parse(JSON.stringify(sites)); // deep copy to avoid mutation
+            }
+          }
+          data.isp_rankings = cleanedRankings;
+        }
         setDashboardStats(data);
       }
     } catch (err) {

@@ -198,27 +198,21 @@ def hash_ip(ip_address: str) -> str:
 
 def normalize_isp_name(raw_isp: str) -> str:
     """Helper to convert complex ISP organization names into clean readable names"""
-    raw_lower = raw_isp.lower().strip()
-    
-    # Check Irancell (supports 'irancell', 'iran cell', 'mtn')
-    if "irancell" in raw_lower or "iran cell" in raw_lower or "mtn" in raw_lower:
+    raw_lower = raw_isp.lower()
+    if "irancell" in raw_lower:
         return "Irancell"
-    
-    # Check Hamrah-e-Aval / MCI (supports 'mobile', 'mci', 'hamrah', 'mcci')
-    # Must be checked before TCI / Mokhaberat as MCI contains "Mobile Telecommunication"
-    elif "mobile" in raw_lower or "mci" in raw_lower or "hamrah" in raw_lower or "mcci" in raw_lower:
+    elif "mobile telecommunication" in raw_lower or "mci" in raw_lower or "hamrah" in raw_lower or "telecommunication company of iran" in raw_lower:
         return "Hamrah-e-Aval (MCI)"
-    
-    # Check Mokhaberat / TCI
-    elif "tci" in raw_lower or "telecommunication company of iran" in raw_lower or "mokhaberat" in raw_lower or "telecommunication" in raw_lower:
-        return "Mokhaberat"
-        
     elif "shatel" in raw_lower:
         return "Shatel"
     elif "pishgaman" in raw_lower:
         return "Pishgaman"
     elif "mobinnet" in raw_lower or "mobin net" in raw_lower:
         return "Mobinnet"
+    elif "mci" in raw_lower:
+        return "Hamrah-e-Aval (MCI)"
+    elif "tci" in raw_lower or "telecommunication" in raw_lower or "mokhaberat" in raw_lower:
+        return "Mokhaberat"
     elif "asiatech" in raw_lower:
         return "Asiatech"
     elif "rightel" in raw_lower:
