@@ -7,8 +7,6 @@
 
 NetVibe is a **crowdsourced, real-time internet monitoring platform** designed to track network connectivity, filtering, and outages across different ISPs in Iran. Users contribute anonymized connectivity tests, which are aggregated to provide live statistics on internet accessibility.
 
-![NetVibe Dashboard Preview](https://via.placeholder.com/1200x600/0f172a/8b5cf6?text=NetVibe+Dashboard)
-
 ---
 
 ## 🚀 Features
@@ -547,14 +545,6 @@ SOFTWARE.
 - **PostgreSQL** - Powerful open-source database
 - **Redis** - In-memory data structure store
 - **Nginx** - High-performance HTTP server
-
----
-
-## 📞 Support
-
-- **Documentation**: [View Full Docs](https://github.com/yourusername/netvibe/wiki)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/netvibe/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/netvibe/discussions)
 
 ---
 
