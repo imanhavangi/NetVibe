@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { 
   Activity, 
   Wifi, 
@@ -274,6 +275,12 @@ export default function NetworkStatusDashboard() {
           </div>
 
           <div className="flex items-center gap-3">
+            <Link
+              href="/about"
+              className="rounded-xl border border-slate-800 bg-slate-900/80 px-3 py-2 text-xs font-medium text-slate-300 transition-colors hover:border-violet-500/40 hover:text-white"
+            >
+              درباره ما
+            </Link>
             <button 
               onClick={() => { fetchIpInfo(); fetchDashboardStats(); }} 
               className="p-2 bg-slate-900 hover:bg-slate-800 rounded-xl border border-slate-800 text-slate-400 hover:text-slate-200 transition-colors"
@@ -503,7 +510,7 @@ export default function NetworkStatusDashboard() {
         <div>
           <span>© ۲۰۲۶ پلتفرم مردمی مانیتورینگ اینترنت ایران </span>
           <span className="text-violet-500 font-bold px-1">•</span>
-          <span>NetVibe.ir</span>
+          <Link href="/about" className="transition-colors hover:text-violet-300">درباره ما</Link>
         </div>
         <div>
           <span>تمام تست‌ها در مرورگر شما به صورت محلی انجام می‌شوند. هیچ آدرس آی‌پی یا ردپای شخصی در سرور ذخیره نمی‌شود.</span>
